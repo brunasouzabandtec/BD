@@ -1,0 +1,32 @@
+select * from Aluno;
+select * from Pessoa;
+
+insert into Aluno values (1192002, 'Maria da Silva', 'Jabaquara');
+
+create table Curso (
+ idCurso int primary key identity (100, 1),
+ nome varchar(40),
+ coordenador varchar(30)
+ );
+ 
+ select * from Curso;
+
+insert into Curso values('ADS', 'Gerson'), ('BD', 'Marise'), ('Redes', 'Alex');
+
+select * from Aluno;
+
+exec sp_help Aluno;
+
+alter table Aluno add fkCurso int foreign key references Curso(idCurso);
+
+update Aluno set fkCurso = 100 where nome = 'Maria da Silva';
+
+update Aluno set fkCurso = 101 where nome = 'Bruna';
+
+insert into Aluno values 
+ (1192003, 'Joel Oliveira', 'Ipiranga', 102),
+ (1192004, 'Claudia Maia', 'Paraíso', 101),
+ (1192005, 'Carlos Souza', 'Consolação', 102),
+ (1192006, 'Rogerio Seni', 'Tatuapé', 101);
+
+ select * from Aluno, Curso where fkCurso = idCurso;
