@@ -1,0 +1,106 @@
+-- Cria o banco de dados (schema) adsa
+create database adsa;
+
+-- Seleciona o banco de dados adsa
+use adsa;
+
+-- Cria tabela Aluno com os campos ra, nome, bairro
+-- ra é criado com o tipo int, pois vai conter valores numéricos inteiros
+-- ra também é configurado como chave primária
+-- nome e bairro são criados com o tipo varchar, pois vão conter caracteres
+create table Aluno (
+  ra int primary key,  -- ra é a chave primária da tabela Aluno
+  nome varchar(40),
+  bairro varchar(40)
+ ); 
+ 
+ -- Exibe os dados da tabela
+ -- O asterisco após o select significa que vai mostrar todas as colunas da tabela
+ select * from Aluno;
+  -- MySQL não distingue letra maiúscula de letra minúscula
+ select * from aluno;
+ 
+ -- Insere dados de um aluno
+ insert into Aluno values 
+    (01192027,'Wellington','Vila Brasilandia'); 
+    
+-- Insere dados de vários alunos de uma vez
+-- Repare que os dados de cada aluno estão entre parênteses, separados por vírgulas    
+ insert into Aluno values
+    (01192124,'Roberto','Jardim Primavera'),
+    (01192123,'Ranyery','Jardim Audir'),
+    (01192053,'Naomi','Vila Leopoldina'),
+    (01192089,'Ricardo','Jardim Alzira');
+select * from Aluno;
+-- Criação da tabela Curso
+create table Curso (
+	IdCurso int primary key,
+    nome varchar(20),
+    coordenador varchar (30)
+);
+select * from curso;
+-- Inserir dados na tabela Curso
+insert into Curso values 
+	(100, 'ADS', 'Gerson'),
+	(101,'BD', 'Marise'),
+    (102,'Redes', 'Alex');
+-- Acrescentar uma coluna na tabela Aluno chamada fkCurso
+alter table Aluno add fkCurso int;
+select * from Curso;
+-- Confgurar a coluna fkCurso como chave estrangeira para a tabela Curso
+alter table Aluno add foreign key (fkCurso) references Curso(idCurso);
+select * from Aluno;
+-- Configurar os valores de fkCurso na tabela Aluno
+update Aluno set fkCurso = 100 where ra in (1192027,1192089);
+update Aluno set fkCurso = 101 where ra in (1192053,1192124);
+update Aluno set fkCurso =102 where ra in (1192123);
+-- Exibir os dados das duas tabelas (ERRADO)
+select * from Aluno, Curso;
+-- Exibir os dados dos alunos e os dados dos cursos correspondentes
+select * from Aluno, Curso where fkCurso = idCurso;
+-- Exibir os dados dos alunos do curso de ADS;
+select * from Aluno, Curso where fkCurso = idCurso and Curso.nome = 'ADS';
+select Aluno.*, Curso.nome, coordenador from Aluno, Curso where fkCurso = idCurso;
+-- Especificando apelido para as tabelas
+select a.*, c.nome,coordenador from Aluno as a, Curso as c
+	where fkCurso = idCurso;
+select a.*, c.nome as 'Nome do Curso',coordenador from Aluno as a, Curso as c
+	where fkCurso = idCurso;
+update Aluno set fkCurso = 105 where ra = 1192123;
+
+alter table Aluno add fkCurso int;
+
+-- Dessa forma acrescenta a coluna e já configura a coluna como 
+-- Chave estrangeira
+alter table Aluno add foreign key (fkCurso) references Curso(idCurso);
+
+
+
+create table Disciplina (
+ idDisc int primary key,
+ nome varchar(40),
+ qtdAula int,
+ fkCurso int,
+ foreign key(fkCurso) references Curso(idCurso)
+ );
+ 
+ select * from Disciplina;
+ 
+ desc Disciplina;
+ 
+ -- Inserção de dados na tabela
+ insert into Disciplina values (1000, 'algoritmos', 7, 100);
+ insert into Disciplina values (1001, 'Modelagem de banco', 4, 101),
+							  (1002, 'Configuração de rede', 5, 102),
+							  (1003, 'Análise de sistemas', 5, 100),
+							  (1004, 'Segurança de dados', 4, 102);
+
+-- Exibir os dados do curso e das suas disciplinas
+
+select * from Curso , Disciplina where fkCurso = idCurso;
+
+-- os dados dos alunos, dos cursos correspondentes
+-- e das disciplinas correspondentes
+
+select * from Aluno, Curso, Disciplina where 
+   Aluno.fkCurso = idCurso and Disciplina.fkCurso = idCurso;
